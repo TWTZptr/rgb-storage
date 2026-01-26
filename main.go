@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net"
-	"rgb-storage/api"
 	"rgb-storage/internal/handlers"
 	"rgb-storage/internal/protocol"
 )
@@ -37,9 +36,6 @@ func handleClient(clientConn net.Conn) {
 
 func main() {
 	ln, _ := net.Listen("tcp", ":8080")
-
-	a := api.Response{}
-	fmt.Printf("%v", a)
 
 	defer (func() {
 		if err := ln.Close(); err != nil {
