@@ -3,6 +3,7 @@ package api
 import "net"
 
 type Response struct {
+	Val string
 	Err string
 }
 

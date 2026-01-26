@@ -5,9 +5,10 @@ import (
 	"net"
 	"rgb-storage/api"
 	"rgb-storage/internal/handlers"
+	"rgb-storage/internal/protocol"
 )
 
-func handleClient(clientConn net.Conn) api.Response {
+func handleClient(clientConn net.Conn) {
 	defer func() {
 		if err := clientConn.Close(); err != nil {
 			fmt.Printf("error: %v\n", err)
@@ -19,26 +20,18 @@ func handleClient(clientConn net.Conn) api.Response {
 
 	if err != nil {
 		fmt.Printf("Error on client read: %v", err)
-		return api.Response{}
 	}
 
-	operationType := api.Operation(buf[0])
-	handler := handlers.CommonHandler{}
-	payload := buf[1:readBytesCount]
+	response := handlers.HandleClient(buf, readBytesCount)
+	serializedResponse := protocol.SerializeResponse(response)
+	wroteBytes, err := clientConn.Write(serializedResponse)
 
-	switch operationType {
-	case api.OpGet:
-		return handler.HandleGet(payload)
+	if err != nil {
+		fmt.Printf("Error on client write: %v", err)
+	}
 
-	case api.OpSet:
-		return handler.HandleSet(payload)
-
-	case api.OpDelete:
-		return handler.HandleDelete(payload)
-
-	default:
-		fmt.Printf("Invalid operation: %d", operationType)
-		return api.Response{Err: "Invalid OpType"}
+	if wroteBytes != len(serializedResponse) {
+		fmt.Printf("Wrote bytes is not equal to serialized length: %d != %d", wroteBytes, serializedResponse)
 	}
 }
 

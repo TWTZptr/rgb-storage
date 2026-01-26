@@ -1,4 +1,4 @@
-package api
+package protocol
 
 type Operation int
 
