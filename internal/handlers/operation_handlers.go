@@ -43,5 +43,8 @@ func (h CommonHandler) HandleSet(data []byte) api.Response {
 }
 
 func (h CommonHandler) HandleDelete(data []byte) api.Response {
+	propertyName := protocol.DeserializeBody(data)
+	m := storage.GetMap()
+	delete(m, propertyName)
 	return api.Response{}
 }
