@@ -35,13 +35,20 @@ func handleClient(clientConn net.Conn) {
 }
 
 func main() {
-	ln, _ := net.Listen("tcp", ":8080")
+	ln, err := net.Listen("tcp", ":8080")
+
+	if err != nil {
+		fmt.Printf("Error on start listen: %v", err)
+		return
+	}
 
 	defer (func() {
 		if err := ln.Close(); err != nil {
 			panic(err)
 		}
 	})()
+
+	fmt.Print("Storage started on :8080")
 
 	for {
 		clientConn, _ := ln.Accept()
