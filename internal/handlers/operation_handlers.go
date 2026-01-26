@@ -4,6 +4,7 @@ import (
 	"rgb-storage/api"
 	"rgb-storage/internal/protocol"
 	"rgb-storage/internal/storage"
+	"strings"
 )
 
 type Handler interface {
@@ -27,6 +28,17 @@ func (h CommonHandler) HandleGet(data []byte) api.Response {
 }
 
 func (h CommonHandler) HandleSet(data []byte) api.Response {
+	body := protocol.DeserializeBody(data)
+	res := strings.Split(body, " ")
+
+	if len(res) != 2 {
+		return api.Response{Err: "Invalid pair name/value"}
+	}
+
+	propertyName, propertyValue := res[0], res[1]
+	m := storage.GetMap()
+	m[propertyName] = propertyValue
+
 	return api.Response{}
 }
 
