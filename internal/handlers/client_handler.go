@@ -22,7 +22,7 @@ func HandleClient(buf []byte, readBytesCount int) api.Response {
 		return handler.HandleDelete(payload)
 
 	default:
-		fmt.Printf("Invalid operation: %d", operationType)
+		fmt.Printf("Invalid operation: %d\n", operationType)
 		return api.Response{Err: "Invalid OpType"}
 	}
 }

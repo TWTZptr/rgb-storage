@@ -18,7 +18,7 @@ func handleClient(clientConn net.Conn) {
 	readBytesCount, err := clientConn.Read(buf)
 
 	if err != nil {
-		fmt.Printf("Error on client read: %v", err)
+		fmt.Printf("Error on client read: %v\n", err)
 	}
 
 	response := handlers.HandleClient(buf, readBytesCount)
@@ -26,11 +26,11 @@ func handleClient(clientConn net.Conn) {
 	wroteBytes, err := clientConn.Write(serializedResponse)
 
 	if err != nil {
-		fmt.Printf("Error on client write: %v", err)
+		fmt.Printf("Error on client write: %v\n", err)
 	}
 
 	if wroteBytes != len(serializedResponse) {
-		fmt.Printf("Wrote bytes is not equal to serialized length: %d != %d", wroteBytes, serializedResponse)
+		fmt.Printf("Wrote bytes is not equal to serialized length: %d != %d\n", wroteBytes, serializedResponse)
 	}
 }
 
@@ -38,7 +38,7 @@ func main() {
 	ln, err := net.Listen("tcp", ":8080")
 
 	if err != nil {
-		fmt.Printf("Error on start listen: %v", err)
+		fmt.Printf("Error on start listen: %v\n", err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func main() {
 		}
 	})()
 
-	fmt.Print("Storage started on :8080")
+	fmt.Println("Storage started on :8080")
 
 	for {
 		clientConn, _ := ln.Accept()
