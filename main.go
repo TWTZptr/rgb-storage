@@ -5,6 +5,7 @@ import (
 	"net"
 	"rgb-storage/internal/handlers"
 	"rgb-storage/internal/protocol"
+	"rgb-storage/internal/snapshoters"
 )
 
 func handleClient(clientConn net.Conn) {
@@ -47,6 +48,9 @@ func main() {
 			panic(err)
 		}
 	})()
+
+	snapshoters.RunSnapshoter("disk")
+	snapshoters.LoadDataFromSnapshoter()
 
 	fmt.Println("Storage started on :8080")
 

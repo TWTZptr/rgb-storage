@@ -2,9 +2,13 @@ package snapshoters
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
+	"syscall"
 )
+
+const defaultDiskSnapshoterPath = "snapshot.bin"
 
 type DiskSnapshoter struct {
 	path string
@@ -29,7 +33,12 @@ func (d DiskSnapshoter) LoadSnapshot(storage map[string]string) {
 	b, err := os.ReadFile(d.path)
 
 	if err != nil {
-		fmt.Printf("Error reading snapshot %v\n", d.path)
+		if errors.Is(err, syscall.ENOENT) {
+			fmt.Println("Snapshot file not found, no restore needed")
+		} else {
+			fmt.Printf("Error reading snapshot %v\n", d.path)
+		}
+
 		return
 	}
 
